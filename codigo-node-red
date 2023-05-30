@@ -1,0 +1,175 @@
+[
+    {
+        "id": "d6ba1af43767edbd",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d047fa8f3a2f6478",
+        "type": "mqtt in",
+        "z": "d6ba1af43767edbd",
+        "name": "",
+        "topic": "topico/nivel-agua",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "0a641f5b2595cb7c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 420,
+        "y": 220,
+        "wires": [
+            [
+                "ea288a9626ffab81",
+                "7331a285ab37478d"
+            ]
+        ]
+    },
+    {
+        "id": "ea288a9626ffab81",
+        "type": "function",
+        "z": "d6ba1af43767edbd",
+        "name": "Formatar mensagem",
+        "func": "var waterLevel = msg.payload;\n\nvar formattedMessage = \"Nível de água: \" + waterLevel + \"%\"; // Exemplo de formatação\n\nmsg.payload = {\n    phone: \"+5511974610071\",\n    text: formattedMessage\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 320,
+        "wires": [
+            [
+                "da2942852a9498e8",
+                "dd1f4b87197f4e43"
+            ]
+        ]
+    },
+    {
+        "id": "da2942852a9498e8",
+        "type": "debug",
+        "z": "d6ba1af43767edbd",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "75cb0cac3a60564b",
+        "type": "http request",
+        "z": "d6ba1af43767edbd",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://api.callmebot.com/whatsapp.php?phone=5511974610071&text={{payload.text}}&apikey=4011326",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 750,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dd1f4b87197f4e43",
+        "type": "delay",
+        "z": "d6ba1af43767edbd",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 660,
+        "y": 400,
+        "wires": [
+            [
+                "75cb0cac3a60564b"
+            ]
+        ]
+    },
+    {
+        "id": "7331a285ab37478d",
+        "type": "influxdb out",
+        "z": "d6ba1af43767edbd",
+        "influxdb": "d75e0dcc970a4790",
+        "name": "",
+        "measurement": "nivel-agua",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "nivel-agua",
+        "x": 1110,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "0a641f5b2595cb7c",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "d75e0dcc970a4790",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "nivel-agua",
+        "name": "",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "https://us-east-1-1.aws.cloud2.influxdata.com",
+        "rejectUnauthorized": true
+    }
+]
